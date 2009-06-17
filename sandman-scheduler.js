@@ -69,7 +69,7 @@ function Sandman(givenInterval) {
     process();
   };
   
-  // Calls a tick and schedules the next.
+  // Schedules the next tick and calls this one.
   //
   function process() {
     if (!sand) { return; };
