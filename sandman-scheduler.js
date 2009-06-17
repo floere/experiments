@@ -1,13 +1,25 @@
 // Sandman schedules sleeping callbacks.
 //
-function Sandman() {
+// Each tick the callbacks are checked and executed if scheduled.
+//
+// A tick is around a second. You can pass in a number of miliseconds to wait between ticks.
+// Note that if a tick needs more time than the interval time, the Sandman might stumble.
+//
+function Sandman(givenInterval) {
+  // The interval to wait between ticks.
+  //
+  var interval = givenInterval || 1000;
   
   // Saves the callbacks in the form:
   // remaining_time => [callback, callback, …]
   //
   var schedule = {};
   
-  // Saves the callback to be executed in duration ticks.
+  // Should the sandman work or not.
+  //
+  var sand     = true;
+  
+  // Registers the callback to be executed in duration ticks.
   //
   // Sandman.sleep(10, function() {
   //   // code to be executed in 10 ticks.
@@ -50,18 +62,27 @@ function Sandman() {
   // Wake the Sandman, let him sprinkle sand.
   // Starts the scheduling process.
   //
-  // Note: This only works in a browser with setTimeout.
+  // Note: This only works in a browser with window.setTimeout.
   //
-  this.sand = function() {
-    
+  this.wake = function() {
+    sand = true;
+    process();
+  };
+  
+  // Calls a tick and schedules the next.
+  //
+  function process() {
+    if (!sand) { return; };
+    window.setTimeout(process, interval);
+    this.tick();
   };
   
   // Let the Sandman vanish.
   //
-  // Note: This only works in a browser with setTimeout.
+  // Note: This only works in a browser with window.setTimeout.
   //
   this.vanish = function() {
-    
+    sand = false;
   };
   
 }
